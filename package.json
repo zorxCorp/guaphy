@@ -1,0 +1,35 @@
+{
+  "name": "guaphy",
+  "version": "1.0.0",
+  "description": "Guaphy is a javascript OGM for graph databases, Guaphy supports neo4j cypher language",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node japaFile.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zorxio/guaphy.git"
+  },
+  "keywords": [
+    "nodejs",
+    "neo4j",
+    "cypher",
+    "javascript",
+    "ogm"
+  ],
+  "author": "Amine OUDJEHIH",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zorxio/guaphy/issues"
+  },
+  "homepage": "https://github.com/zorxio/guaphy#readme",
+  "dependencies": {
+    "collections": "^5.1.12",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "neo4j-driver": "^4.2.2"
+  },
+  "devDependencies": {
+    "japa": "^3.1.1"
+  }
+}
