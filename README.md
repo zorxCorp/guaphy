@@ -606,6 +606,12 @@ let relatedMovies = await person.load('actedInMovies')
 #### reverse relation
 
 ```
+actors() {
+ return this.relatedToMany('Models/Person', "ACTED_IN", true)
+}
+```
+
+```
 let person = await Person.create({ name: "Denzel Washington" })
 let movie  = await Movie.create({ name: "The Equalizer" })
 
