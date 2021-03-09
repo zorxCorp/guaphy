@@ -122,7 +122,7 @@ module.exports = Person
 You can pass data directly to the model on creation, instead of manually setting attributes after instantiation:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 let person = await Person.create({ name: "Zorx" })
 ```
@@ -131,7 +131,7 @@ let person = await Person.create({ name: "Zorx" })
 Like create, you can pass data directly for multiple instances on creation:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 let data = [{name: "Zorx"}, {name: "Leeto"}]
 let people = await Person.createMany(data)
@@ -141,7 +141,7 @@ let people = await Person.createMany(data)
 Select all nodes:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 const people = await Person.all()
 ```
@@ -150,7 +150,7 @@ const people = await Person.all()
 Find the first node from the database:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 await Person.first()
 ```
@@ -159,7 +159,7 @@ await Person.first()
 Find the last node from the database:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 await Person.last()
 ```
@@ -168,7 +168,7 @@ await Person.last()
 Find a record using the primary key (always returns one record):
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 await Person.find(1)
 ```
@@ -177,7 +177,7 @@ await Person.find(1)
 Return a count of records in a given result set
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 let count = await Person.count()
 ```
@@ -186,7 +186,7 @@ let count = await Person.count()
 The destroy method deletes an existing model by its primary key
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 // Single destroy
 let person = await Person.first();
@@ -205,7 +205,7 @@ await Person.destroy([firstPerson._id, lastPerson._id])
 Delete all nodes.
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 const people = await Person.truncate()
 ```
@@ -213,7 +213,7 @@ const people = await Person.truncate()
 ### forceTruncate
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 const people = await Person.forceTruncate()
 ```
@@ -231,7 +231,7 @@ let people = await Person.as('p').query().where('p.name', 'Zorx').return('p').fe
 To obtain a Query Builder instance, call the model query method:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 const adults = await Person
 .query()
@@ -247,7 +247,7 @@ The fetch method is required to execute the query ensuring results return
 Update an instance:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 let person = await Person.find(1)
 await person.update({ name: 'Leeto' })
@@ -279,7 +279,7 @@ person = await person.save()
 A single model instance can be deleted by calling the delete method:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 let person = await Person.find(1)
 await person.delete()
@@ -304,7 +304,7 @@ await person.restore()
 Unlike delete method the forceDelete method will delete the model instance immediately
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 let person = await Person.find(1)
 await person.forceDelete()
@@ -314,7 +314,7 @@ await person.forceDelete()
 Bulk deletes are performed with the help of Query Builder:
 
 ```
-const Person = require("../data/Models/Person")
+const Person = require("Models/Person")
 
 const adults = await Person
 .query()
