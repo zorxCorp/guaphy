@@ -355,7 +355,7 @@ let user = await User.create({ name: "user" })
 let role = await Role.create({ name: "admin" })
 
 let relation = await user.role().attach(role, {'since': 1999})
-relation = await user.role().attach(role, {'since': 2000})
+relation = await user.role().update(role, {'since': 2000})
 ```
 
 
@@ -366,7 +366,6 @@ let user = await User.create({ name: "user" })
 let role = await Role.create({ name: "admin" })
 
 let relation = await user.role().attach(role, {'since': 1999})
-relation = await user.role().attach(role, {'since': 2000})
 
 // Without eager loading
 user = await User.first()
