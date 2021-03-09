@@ -76,7 +76,7 @@ test.group('Relations | RelatedToOne', (group) => {
     assert.instanceOf(relation, RelatedToOne);
     assert.equal(relation.since, 1999)
 
-    relation = await user.role().attach(role, {'since': 2000})
+    relation = await user.role().update(role, {'since': 2000})
 
     assert.instanceOf(relation, RelatedToOne);
     assert.equal(relation.since, 2000)
