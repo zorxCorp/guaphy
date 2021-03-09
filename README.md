@@ -713,8 +713,8 @@ await person.actedInMovies().detach(movie)
 #### Require Query Builder
 
 ```
-const QueryBuilder = require("../../src/QueryBuilder")
-const queryBuilder = (new QueryBuilder)
+const { QueryBuilder } = require("guaphy")
+const queryBuilder = new QueryBuilder
 ```
 
 ### cypher
@@ -740,8 +740,8 @@ Returns cypher query to string
 ```
 let query = 'CREATE (a:Person {name: "zorx"}) RETURN a';
 
-let result1 = (new QueryBuilder).cypher(query).toCypher()
-let result2 = (new QueryBuilder).cypher(query).toCYPHER()
+let result1 = queryBuilder.cypher(query).toCypher()
+let result2 = queryBuilder.cypher(query).toCYPHER()
 
 // result1
 // CREATE (a:Person {name: "zorx"}) RETURN a
@@ -769,12 +769,10 @@ let result = await queryBuilder
 ```
 
 ### count
-Return a count of records in a given result set
+Return a count of records.
 
 ```
-let result = await queryBuilder.cypher('MATCH (n:Person) RETURN n').fetch()
-
-let count = await result.count()
+let count = await queryBuilder.cypher('MATCH (n:Person) RETURN n').count()
 ```
 
 ## Clauses
