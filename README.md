@@ -21,7 +21,9 @@ Guaphy is a javascript OGM for graph databases, Guaphy supports neo4j cypher lan
 
 # How To Install
 
-` yarn add guaphy `
+```
+yarn add guaphy
+```
 
 Default Env
 
