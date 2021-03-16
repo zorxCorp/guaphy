@@ -173,6 +173,15 @@ const Person = require("Models/Person")
 await Person.find(1)
 ```
 
+### findOrFail
+FindOrFail a record using the primary key (always returns one record or an exception):
+
+```
+const Person = require("Models/Person")
+
+await Person.findOrFail(1)
+```
+
 ### count
 Return a count of records in a given result set
 
@@ -262,6 +271,19 @@ you persist the model instance which in turn makes the insert query for you. For
 ```
 let person = new Person;
 person.name = "Zorx"
+
+await person.save()
+```
+
+### fill
+The fill method will override all existing key/pair values of the model instance :
+
+```
+let person = new Person;
+
+person.fill({
+  name: "Zorx"
+})
 
 await person.save()
 ```

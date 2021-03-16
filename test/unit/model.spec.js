@@ -122,6 +122,27 @@ test.group('Model Static Methods', (group) => {
 		assert.equal(person._id, first._id)
 	})
 
+	test('findOrFail', async (assert) => {
+		await Person.create({
+			name: "Zorx"
+		})
+
+		let first = await Person.first();
+		let person = await Person.findOrFail(first._id);
+
+		assert.instanceOf(person, Person)
+		assert.equal(person.name, first.name)
+		assert.equal(person._id, first._id)
+
+
+		try {
+			await Person.findOrFail(1000);
+		}catch(e) {
+			console.log(e)
+			assert.equal(e, "Cannot find node for 1000 model")
+		}
+	})
+
 	test('update', async (assert) => {
 		let people = await Person.update({
 			firstname: "Lee"
@@ -241,6 +262,27 @@ test.group('Model Instance Methods', (group) => {
 
 		assert.instanceOf(person, Person)
 		assert.equal(person.name, "Leeto")
+	})
+
+	test('fill', async (assert) => {
+		let person = new Person;
+
+		person.fill({
+			name: "Zorx"
+		})
+
+		assert.isFalse(person.isPersisted)
+
+		person = await person.save()
+
+		assert.isTrue(person.isPersisted)
+		assert.instanceOf(person, Person)
+		assert.equal(person.name, "Zorx")
+
+		let newInstance = await Person.find(person._id)
+
+		assert.instanceOf(newInstance, Person)
+		assert.equal(newInstance.name, "Zorx")
 	})
 
 	test('instantiate and save', async (assert) => {

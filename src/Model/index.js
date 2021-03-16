@@ -165,6 +165,16 @@ class Model {
       .first()
   }
 
+  static async findOrFail(id) {
+    let model = await this.find(id);
+
+    if (!model) {
+      throw `Cannot find node for ${id} model`
+    }
+
+    return model
+  }
+
   static async update(data) {
     let self = new this
 
@@ -264,6 +274,12 @@ class Model {
     }
 
     return this.create(this.$attributes)
+  }
+
+  fill(data) {
+    this.$attributes = data
+
+    return this;
   }
 
   async restore() {
