@@ -47,7 +47,7 @@ class QueryBuilder {
 		const { NEO4J_DATABASE } = getEnv();
 
     return new Promise((resolve, reject) => {
-      const session = getConnection().session({
+      const session = getConnection(mode).session({
       	database: NEO4J_DATABASE,
         defaultAccessMode: mode === 'read' ? getDriver().session.READ : getDriver().session.WRITE,
       })

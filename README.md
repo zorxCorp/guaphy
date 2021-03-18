@@ -30,6 +30,7 @@ Default Env
 ```
 NEO4J_PROTOCOL = 'bolt'
 NEO4J_HOST = 'localhost'
+NEO4J_REPLICA_HOST = 'localhost'
 NEO4J_PORT = '7687'
 NEO4J_USER = 'neo4j'
 NEO4J_PASSWORD = 'leeto'

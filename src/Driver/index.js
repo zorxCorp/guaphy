@@ -6,14 +6,27 @@ const neo4j = require('neo4j-driver')
  * @return {Neo4jDriver}
  */
 let instance = null
-const getConnection = () => {
+let replicaInstance = null
+
+const getConnection = (mode) => {
   // its already instanced
-  if (instance) {
+  if (mode == "read" && replicaInstance) {
+    return replicaInstance
+  }
+
+  // its already instanced
+  if (mode != "read" && instance) {
     return instance
   }
 
   // get info from env
-  const { URI, NEO4J_USER, NEO4J_PASSWORD, config } = getEnv()
+  const { URI, REPLICA_URI, NEO4J_USER, NEO4J_PASSWORD, config } = getEnv()
+
+  if (mode == "read") {
+    replicaInstance = neo4j.driver(REPLICA_URI, neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD), config)
+
+    return replicaInstance
+  }
 
   // create instance
   instance = neo4j.driver(URI, neo4j.auth.basic(NEO4J_USER, NEO4J_PASSWORD), config)
@@ -31,6 +44,7 @@ const getEnv = () => {
   const {
     NEO4J_PROTOCOL = 'bolt',
     NEO4J_HOST = 'localhost',
+    NEO4J_REPLICA_HOST = 'localhost',
     NEO4J_PORT = '7687',
     NEO4J_USER = 'neo4j',
     NEO4J_PASSWORD = 'leeto',
@@ -40,6 +54,8 @@ const getEnv = () => {
 
 
   const URI = `${NEO4J_PROTOCOL}://${NEO4J_HOST}:${NEO4J_PORT}`
+  const REPLICA_URI = `${NEO4J_PROTOCOL}://${NEO4J_REPLICA_HOST}:${NEO4J_PORT}`
+
   const enterprise = NEO4J_ENTERPRISE === 'true'
 
   // Build additional config
@@ -75,7 +91,7 @@ const getEnv = () => {
     }
   })
 
-  return { URI, NEO4J_USER, NEO4J_PASSWORD, enterprise, NEO4J_DATABASE, config }
+  return { URI, REPLICA_URI, NEO4J_USER, NEO4J_PASSWORD, enterprise, NEO4J_DATABASE, config }
 }
 
 const getDriver = () => {
