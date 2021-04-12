@@ -30,7 +30,7 @@ test.group('Relations | RelatedToOne', (group) => {
     assert.instanceOf(relation, RelatedToOne);
   })
 
-  test.only('exists', async (assert) => {
+  test('exists', async (assert) => {
     let user = await User.create({
       name: "user"
     })
