@@ -373,6 +373,18 @@ let role = await Role.create({ name: "admin" })
 let relation = await user.role().attach(role, {'since': 1999})
 ```
 
+#### relation exists
+
+```
+let user = await User.create({ name: "user" })
+
+let role = await Role.create({ name: "admin" })
+
+await user.role().attach(role, {'since': 1999})
+
+await user.role().exists(role) // true
+```
+
 #### update relation properties
 
 ```
@@ -543,6 +555,17 @@ let person = await Person.create({ name: "Denzel Washington" })
 let movie  = await Movie.create({ name: "The Equalizer" })
 
 let relation = await person.actedInMovies().attach(movie)
+```
+
+#### relation exists
+
+```
+let person = await Person.create({ name: "Denzel Washington" })
+let movie  = await Movie.create({ name: "The Equalizer" })
+
+let relation = await person.actedInMovies().attach(movie)
+
+await person.actedInMovies().exists(movie) // true
 ```
 
 #### attach with properties

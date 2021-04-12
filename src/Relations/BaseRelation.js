@@ -125,6 +125,31 @@ class BaseRelation {
       .first()
   }
 
+  async exists(model) {
+    if (!this._isLinkingCorrectModel(model)) {
+      throw "can't attach to the wrong model"
+    }
+
+    const relationType = this._isReverse ? 'relationIn' : 'relationOut'
+
+    const relation = (new QueryBuilder()).node(this._parent.$variable)
+          [relationType](null, this._relationName)
+          .node(model.$variable)
+          .toCypher();
+
+    return await (new QueryBuilder(this))
+      .match([
+        c => c.node(this._parent.$variable, this._parent.$label),
+        c => c.node(model.$variable, model.$label)
+       ])
+      .where(c => {
+        return c.where(`$id(${this._parent.$variable})`, this._parent.$primaryKey)
+        .and(`$id(${model.$variable})`, model.$primaryKey)
+      })
+      .return(`$EXISTS(${relation})`)
+      .first()
+  }
+
   async attach(model, data = {}) {
     if (!this._isLinkingCorrectModel(model)) {
       throw "can't attach to the wrong model"

@@ -30,6 +30,28 @@ test.group('Relations | RelatedToOne', (group) => {
     assert.instanceOf(relation, RelatedToOne);
   })
 
+  test.only('exists', async (assert) => {
+    let user = await User.create({
+      name: "user"
+    })
+
+    let role = await Role.create({
+      name: "admin"
+    })
+
+    let role2 = await Role.create({
+      name: "root"
+    })
+
+    let relation = await user.role().attach(role)
+
+    let result = await user.role().exists(role);
+    let result2 = await user.role().exists(role2);
+
+    assert.isTrue(result)
+    assert.isFalse(result2)
+  })
+
   test("can't attach wrong model", async (assert) => {
     let user = await User.create({
       name: "user"

@@ -412,6 +412,28 @@ test.group('Relations | RelatedToMany', (group) => {
     assert.equal(people[0].directedMovies[0].name, 'Fences');
   })
 
+  test('exists', async (assert) => {
+    let person = await Person.create({
+      name: "Denzel Washington"
+    })
+
+    let movie = await Movie.create({
+      name: "The Equalizer"
+    })
+
+    let movie2 = await Movie.create({
+      name: "The Equalizer2"
+    })
+
+    await person.actedInMovies().attach(movie)
+
+    let result = await person.actedInMovies().exists(movie);
+    let result2 = await person.actedInMovies().exists(movie2);
+
+    assert.isTrue(result)
+    assert.isFalse(result2)
+  });
+
   test('detach', async (assert) => {
     let person = await Person.create({
       name: "Denzel Washington"
