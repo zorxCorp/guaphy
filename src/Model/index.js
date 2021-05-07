@@ -358,6 +358,8 @@ class Model {
       })
     }
 
+    result._label = _.result(this, '$label')
+
     return result
   }
 
