@@ -297,6 +297,8 @@ test.group('Model Instance Methods', (group) => {
 		assert.isTrue(person.isPersisted)
 		assert.instanceOf(person, Person)
 		assert.equal(person.name, "Zorx")
+
+		assert.exists(person._id)
 	})
 
 	test('change and save', async (assert) => {

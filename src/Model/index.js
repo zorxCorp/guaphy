@@ -270,10 +270,14 @@ class Model {
     delete data[this._primaryKey]
 
     if (this.$primaryKey) {
-      return this.update(this.$attributes)
+      return await this.update(this.$attributes)
     }
 
-    return this.create(this.$attributes)
+    let response = await this.create(this.$attributes)
+
+    this.$attributes[this._primaryKey] = this.$primaryKey = response.$primaryKey
+
+    return response
   }
 
   fill(data) {
