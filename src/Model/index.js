@@ -349,7 +349,13 @@ class Model {
   }
 
   toJson() {
-    let result = _.merge(_.result(this, '$attributes'), _.mapValues(this.$relations, r => r.toJson()))
+    let result = _.merge(_.result(this, '$attributes'), _.mapValues(this.$relations, r => {
+      if (_.isObject(r)) {
+        return r.toJson()
+      }
+
+      return r
+    }))
     const relatedProperties = _.result(this, '$relationProperties', {})
 
     if (!_.isEmpty(relatedProperties)) {

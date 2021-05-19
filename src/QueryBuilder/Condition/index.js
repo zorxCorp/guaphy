@@ -126,6 +126,19 @@ class Condition {
 		return this;
 	}
 
+  whereIdIn(field, q) {
+    if (!q) {
+      q = field
+      field = ''
+    }
+
+    field = this._convertField(field)
+
+    this.#conditions.push(`id(${field}) IN ` + this._getVariable(q))
+
+    return this;
+  }
+
 	whereContains(field, q) {
 		field = this._convertField(field)
 

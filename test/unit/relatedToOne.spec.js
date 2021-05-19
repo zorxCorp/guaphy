@@ -255,7 +255,7 @@ test.group('Relations | RelatedToOne', (group) => {
 
     assert.instanceOf(users, Collection);
 
-    assert.equal(users.count(), 1);
+    assert.equal(users.count(), 2);
     assert.instanceOf(users.first(), User);
     assert.exists(users.first().getRelated('role'));
 

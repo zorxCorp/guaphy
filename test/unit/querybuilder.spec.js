@@ -486,6 +486,11 @@ test.group('QueryBuilder', (group) => {
 			assert.equal((new QueryBuilder).whereId(17).toCypher(), "WHERE id() = 17")
 		})
 
+    test('where id in', async (assert) => {
+      assert.equal((new QueryBuilder).whereIdIn([17]).toCypher(), "WHERE id() IN [17]")
+      assert.equal((new QueryBuilder).whereIdIn('n', [17]).toCypher(), "WHERE id(n) IN [17]")
+    })
+
 		test('where between', async (assert) => {
 			let result = (new QueryBuilder).whereBetween('a.age', 17, 18, '<', '<').toCypher()
 

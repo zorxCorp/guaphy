@@ -231,6 +231,63 @@ test.group('Relations | RelatedToMany', (group) => {
     assert.equal(actor.name, 'Denzel Washington')
   })
 
+  test('eager loading | withCountRelation with empty relations', async (assert) => {
+
+    let person = await Person.create({
+      name: "Denzel Washington"
+    })
+
+    let people = await Person
+      .query()
+      .withCountRelation('actedInMovies')
+      .return()
+      .fetch()
+
+
+    assert.instanceOf(people, Collection);
+
+    assert.equal(people.count(), 1);
+    assert.instanceOf(people.first(), Person);
+    assert.exists(people.first().getRelated('actedInMoviesCount'));
+
+    const countMovies = people.first().getRelated('actedInMoviesCount')
+    assert.equal(countMovies, 0);
+  })
+
+  test('eager loading | withCountRelation', async (assert) => {
+
+    let person = await Person.create({
+      name: "Denzel Washington"
+    })
+
+    let movie1 = await Movie.create({
+      name: "The Equalizer"
+    })
+
+    let movie2 = await Movie.create({
+      name: "The Equalizer2"
+    })
+
+    await person.actedInMovies().attach(movie1)
+    await person.actedInMovies().attach(movie2)
+
+    let people = await Person
+      .query()
+      .withCountRelation('actedInMovies')
+      .return()
+      .fetch()
+
+
+    assert.instanceOf(people, Collection);
+
+    assert.equal(people.count(), 1);
+    assert.instanceOf(people.first(), Person);
+    assert.exists(people.first().getRelated('actedInMoviesCount'));
+
+    const countMovies = people.first().getRelated('actedInMoviesCount')
+    assert.equal(countMovies, 2);
+  })
+
   test('eager loading | withRelation', async (assert) => {
 
     let person = await Person.create({
@@ -275,6 +332,50 @@ test.group('Relations | RelatedToMany', (group) => {
     assert.exists(people[0].actedInMovies[0].name);
   })
 
+  test('eager loading | withRelation limit', async (assert) => {
+
+    let person = await Person.create({
+      name: "Denzel Washington"
+    })
+
+    let movie1 = await Movie.create({
+      name: "The Equalizer"
+    })
+
+    let movie2 = await Movie.create({
+      name: "The Equalizer2"
+    })
+
+    await person.actedInMovies().attach(movie1)
+    await person.actedInMovies().attach(movie2)
+
+    let people = await Person
+      .query()
+      .withRelation('actedInMovies', 1)
+      .return()
+      .fetch()
+
+
+    assert.instanceOf(people, Collection);
+
+    assert.equal(people.count(), 1);
+    assert.instanceOf(people.first(), Person);
+    assert.exists(people.first().getRelated('actedInMovies'));
+
+    const movies = people.first().getRelated('actedInMovies')
+    assert.instanceOf(movies, Collection);
+    assert.equal(movies.count(), 1);
+
+    let firstMovie = movies.first()
+    assert.instanceOf(firstMovie, Movie);
+
+    people = people.toJson()
+
+    assert.exists(people[0].actedInMovies);
+    assert.exists(people[0].actedInMovies[0]);
+    assert.exists(people[0].actedInMovies[0].name);
+  })
+
   test('eager loading | withRelation filter related', async (assert) => {
     let person = await Person.create({
       name: "Denzel Washington"
@@ -308,7 +409,59 @@ test.group('Relations | RelatedToMany', (group) => {
 
     assert.instanceOf(people, Collection);
 
-    assert.equal(people.count(), 1);
+    assert.equal(people.count(), 2);
+    assert.instanceOf(people.first(), Person);
+    assert.exists(people.first().getRelated('actedInMovies'));
+
+    const movies = people.first().getRelated('actedInMovies')
+    assert.instanceOf(movies, Collection);
+    assert.equal(movies.count(), 1);
+
+    let firstMovie = movies.first()
+    assert.instanceOf(firstMovie, Movie);
+    assert.equal(firstMovie.name, 'The Equalizer');
+
+    people = people.toJson()
+
+    assert.exists(people[0].actedInMovies);
+    assert.exists(people[0].actedInMovies[0]);
+    assert.equal(people[0].actedInMovies[0].name, 'The Equalizer');
+  })
+
+  test('eager loading | withRelation filter related and limit', async (assert) => {
+    let person = await Person.create({
+      name: "Denzel Washington"
+    })
+
+    let person2 = await Person.create({
+      name: "Keanu Reeves"
+    })
+
+    let movie1 = await Movie.create({
+      name: "The Equalizer"
+    })
+
+    let movie2 = await Movie.create({
+      name: "The Equalizer2"
+    })
+
+    let movie3 = await Movie.create({
+      name: "John Wick"
+    })
+
+    await person.actedInMovies().attach(movie1)
+    await person.actedInMovies().attach(movie2)
+    await person2.actedInMovies().attach(movie3)
+
+    let people = await Person
+      .query()
+      .withRelation('actedInMovies', c => c.where('name', 'The Equalizer'), 1)
+      .return()
+      .fetch()
+
+    assert.instanceOf(people, Collection);
+
+    assert.equal(people.count(), 2);
     assert.instanceOf(people.first(), Person);
     assert.exists(people.first().getRelated('actedInMovies'));
 

@@ -669,6 +669,24 @@ movie = await Movie.first()
 let relatedActors = await movie.load('actors')
 ```
 
+#### eager loading | withCountRelation
+
+```
+let person  = await Person.create({ name: "Denzel Washington" })
+let movie1  = await Movie.create({ name: "The Equalizer" })
+let movie2  = await Movie.create({ name: "The Equalizer2" })
+
+await person.actedInMovies().attach(movie1)
+await person.actedInMovies().attach(movie2)
+
+let p = await Person
+  .query()
+  .withCountRelation('actedInMovies')
+  .return()
+  .first()
+
+// p.toJson().actedInMoviesCount == 2
+```
 
 #### eager loading | withRelation
 
@@ -706,6 +724,46 @@ await person2.actedInMovies().attach(movie3)
 let people = await Person
   .query()
   .withRelation('actedInMovies', c => c.where('name', 'The Equalizer'))
+  .return()
+  .fetch()
+```
+
+#### eager loading | withRelation limit
+
+```
+let person  = await Person.create({ name: "Denzel Washington" })
+let person2 = await Person.create({ name: "Keanu Reeves" })
+let movie1  = await Movie.create({ name: "The Equalizer" })
+let movie2  = await Movie.create({ name: "The Equalizer2" })
+let movie3  = await Movie.create({ name: "John Wick" })
+
+await person.actedInMovies().attach(movie1)
+await person.actedInMovies().attach(movie2)
+await person2.actedInMovies().attach(movie3)
+
+let people = await Person
+  .query()
+  .withRelation('actedInMovies', 5)
+  .return()
+  .fetch()
+```
+
+#### eager loading | withRelation filter related and limit
+
+```
+let person  = await Person.create({ name: "Denzel Washington" })
+let person2 = await Person.create({ name: "Keanu Reeves" })
+let movie1  = await Movie.create({ name: "The Equalizer" })
+let movie2  = await Movie.create({ name: "The Equalizer2" })
+let movie3  = await Movie.create({ name: "John Wick" })
+
+await person.actedInMovies().attach(movie1)
+await person.actedInMovies().attach(movie2)
+await person2.actedInMovies().attach(movie3)
+
+let people = await Person
+  .query()
+  .withRelation('actedInMovies', c => c.where('name', 'The Equalizer'), 5)
   .return()
   .fetch()
 ```
@@ -1493,6 +1551,13 @@ queryBuilder.whereRegex('a.name', 'z.*') // equals to "WHERE a.name =~ 'z.*'"
 
 ```
 queryBuilder.whereIn('a.age', [17, 18, 19]) // equals to "WHERE a.age IN [17,18,19]"
+```
+
+### where id in
+
+```
+queryBuilder.whereIdIn([17, 18, 19]) // equals to "WHERE id() IN [17,18,19]"
+queryBuilder.whereIdIn('n', [17, 18, 19]) // equals to "WHERE id(n) IN [17,18,19]"
 ```
 
 ### where label

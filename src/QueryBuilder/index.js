@@ -77,12 +77,15 @@ class QueryBuilder {
     }
 
     const mIndex = _.findLastIndex(this._statements, s => _.startsWith(s, 'MATCH'))
+    const oIndex = _.findLastIndex(this._statements, s => _.startsWith(s, 'OPTIONAL MATCH'))
     const wIndex = _.findLastIndex(this._statements, s => _.startsWith(s, 'WHERE'))
 
     const size = this._statements.length;
 
     if (wIndex > -1) {
       this._statements[wIndex] = `WHERE NOT exists(${this.#model.$variable}.deleted_at) AND`
+    }else if (oIndex > -1) {
+      this._statements.splice(oIndex + 1, 0, `WHERE NOT exists(${this.#model.$variable}.deleted_at)`)
     }else if (mIndex > -1) {
       this._statements.splice(mIndex + 1, 0, `WHERE NOT exists(${this.#model.$variable}.deleted_at)`)
     }
@@ -260,10 +263,27 @@ class QueryBuilder {
   }
 
   /**
+   * withCountRelation
+   * @return {Clause}
+   */
+  withCountRelation(relation, callback) {
+    return this._withRelation(relation, callback, true)
+  }
+
+
+  /**
    * withRelation
    * @return {Clause}
    */
-  withRelation(relation, callback) {
+  withRelation(relation, callback, limit="") {
+    return this._withRelation(relation, callback, false, limit)
+  }
+
+  /**
+   * withRelation
+   * @return {Clause}
+   */
+  _withRelation(relation, callback, isCount=false, limit="") {
     if (!this.#model) {
       return this
     }
@@ -289,19 +309,30 @@ class QueryBuilder {
 
     builder._freezeAutoMatch()
     let q = builder.match(o => {
-      return o.node(this.#model.$variable)
-        [relationType](newRelation.$variable, newRelation._relationName)
-        .node(modelAs, attachedToModel.$label)
+      return o.node(this.#model.$variable, this.#model.$label)
     })
+      .optionalMatch(o => {
+        return o.node(this.#model.$variable)
+          [relationType](newRelation.$variable, newRelation._relationName)
+          .node(modelAs, attachedToModel.$label)
+      })
 
     if (_.isFunction(callback)) {
       callback(q)
     }
 
+    if (_.isNumber(callback)) {
+      limit = `[..${callback}]`
+    }else if (_.isNumber(limit)) {
+      limit = `[..${limit}]`
+    }
+
+    let fn = isCount ? 'count' : 'collect';
+
     let withs = [
       `$${this.#model.$variable}`,
-      `$collect(${newRelation.$variable}) as ${modelAs}_relationProperties`,
-      `$collect(${modelAs}) as ${modelAs}_collection`
+      `$${fn}(${newRelation.$variable})${limit} as ${modelAs}_relationProperties`,
+      `$${fn}(${modelAs})${limit} as ${modelAs}_collection`
     ]
 
     if (this._requestedRelations.length) {
@@ -546,6 +577,12 @@ class QueryBuilder {
 
   whereId(field, q) {
     this._addCondition(new Condition(this, this.#model).whereId(field, q))
+
+    return this;
+  }
+
+  whereIdIn(field, list) {
+    this._addCondition(new Condition(this, this.#model).whereIdIn(field, list))
 
     return this;
   }

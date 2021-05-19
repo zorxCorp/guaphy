@@ -110,6 +110,10 @@ class Transformer {
   _addRelationPropertyToNode(relationVar, node, record) {
     const properties = record[`${relationVar}_relationProperties`];
 
+    if (neo4j.isInt(properties)) {
+      return node
+    }
+
     if (!properties) {
       return node
     }
@@ -131,16 +135,27 @@ class Transformer {
 
   _transformRelatedRecord(record, parentNode) {
     _.each(this.#model.$withRelations, (relationVar, relationKey) => {
+      let relations;
       let relation = parentNode[relationKey]()
+      let relationName = relationKey;
 
-      let relations = new Collection(
-        _.map(record[`${relationVar}_collection`], r => {
-          r = this._addRelationPropertyToNode(relationVar, r, record)
-          return this._transformValue(r, relation._attachedTo)
-        })
-      )
+      if (neo4j.isInt(record[`${relationVar}_collection`])) {
+        relations = this._convertInteger(record[`${relationVar}_collection`])
+        relationName = `${relationKey}Count`
+      }else{
+        relations = new Collection(
+          _.map(record[`${relationVar}_collection`], r => {
+            r = this._addRelationPropertyToNode(relationVar, r, record)
+            return this._transformValue(r, relation._attachedTo)
+          })
+        )
 
-      parentNode.$relations[relationKey] = relation.constructor.name == 'RelatedToOne' ? relations.first() : relations
+        if (relation.constructor.name == 'RelatedToOne') {
+          relations = relations.first()
+        }
+      }
+
+      parentNode.$relations[relationName] = relations
     })
 
     return [parentNode]
