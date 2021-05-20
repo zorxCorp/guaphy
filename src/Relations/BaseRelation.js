@@ -1,9 +1,9 @@
 'use strict'
-const _ = require("lodash")
+const _            = require("lodash")
 const QueryBuilder = require("../QueryBuilder")
-const ProxyHandler =  require('../Model/proxyHandler')
-const moment = require('moment')
-const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss'
+const ProxyHandler = require('../Model/proxyHandler')
+const moment       = require('moment')
+const DATE_FORMAT  = 'YYYY-MM-DD HH:mm:ss'
 
 class BaseRelation {
   _parent = null

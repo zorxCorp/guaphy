@@ -557,6 +557,16 @@ let movie  = await Movie.create({ name: "The Equalizer" })
 let relation = await person.actedInMovies().attach(movie)
 ```
 
+#### attach Many
+
+```
+let person = await Person.create({ name: "Denzel Washington" })
+let movie  = await Movie.create({ name: "The Equalizer" })
+let movie2  = await Movie.create({ name: "The Equalizer2" })
+
+let relation = await person.actedInMovies().attachMany([movie1, movie2])
+```
+
 #### relation exists
 
 ```
@@ -575,6 +585,19 @@ let person = await Person.create({ name: "Denzel Washington" })
 let movie  = await Movie.create({ name: "The Equalizer" })
 
 let relation = await person.actedInMovies().attach(movie, {name: 'Robert McCall'})
+```
+
+#### attach many with properties
+
+```
+let person = await Person.create({ name: "Denzel Washington" })
+let movie1  = await Movie.create({ name: "The Equalizer" })
+let movie2  = await Movie.create({ name: "The Equalizer2" })
+
+let relation = await person.actedInMovies().attach(
+  [movie1, movie2],
+  [{name: 'Robert McCall'}, {name: 'Robert McCall'}]
+)
 ```
 
 #### update relation properties

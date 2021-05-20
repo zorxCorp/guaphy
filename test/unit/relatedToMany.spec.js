@@ -38,6 +38,25 @@ test.group('Relations | RelatedToMany', (group) => {
     assert.instanceOf(relation, RelatedToMany);
   })
 
+  test('attachMany', async (assert) => {
+    let person = await Person.create({
+      name: "Denzel Washington"
+    })
+
+    let movie = await Movie.create({
+      name: "The Equalizer"
+    })
+
+    let movie2 = await Movie.create({
+      name: "The Equalizer2"
+    })
+
+    let relations = await person.actedInMovies().attachMany([movie, movie2])
+
+    assert.instanceOf(relations, Collection);
+    assert.instanceOf(relations.first(), RelatedToMany);
+  })
+
   test("can't attach wrong model", async (assert) => {
     let person = await Person.create({
       name: "Denzel Washington"
