@@ -1,6 +1,6 @@
 {
   "name": "guaphy",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Guaphy is a javascript OGM for graph databases, Guaphy supports neo4j cypher language",
   "main": "src/index.js",
   "scripts": {
