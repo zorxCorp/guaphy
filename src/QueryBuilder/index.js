@@ -443,10 +443,10 @@ class QueryBuilder {
     return this;
   }
 
-  set(field, val, map = "=") {
+  set(field, val, operator = "=") {
     this._mode = 'write'
 
-    this._addClause(new Clause(this, this.#model).set(field, val, map))
+    this._addClause(new Clause(this, this.#model).set(field, val, operator))
 
     return this;
   }

@@ -258,13 +258,13 @@ class Clause {
     return this
   }
 
-  set(field, val, map = "=") {
+  set(field, val, operator = "=") {
   	let q = '';
 
   	if (_.isObject(field)) {
-      q = _.map(field, (v, k) => this._convertField(k) + ` ${map} ` + this._getVariable(v)).join(',')
+      q = _.map(field, (v, k) => this._convertField(k) + ` ${operator} ` + this._getVariable(v)).join(',')
   	}else {
-      q = this._convertField(field) + ` ${map} ` + this._getVariable(val)
+      q = this._convertField(field) + ` ${operator} ` + this._getVariable(val)
   	}
 
   	this.#clauses.push(`SET ${q}`)
