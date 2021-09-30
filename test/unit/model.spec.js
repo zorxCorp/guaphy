@@ -152,6 +152,7 @@ test.group('Model Static Methods', (group) => {
 
 		let lastPerson = await Person.last();
 		assert.equal(lastPerson.firstname, "Lee")
+		assert.exists(lastPerson.created_at)
 	})
 
 	test('count', async (assert) => {

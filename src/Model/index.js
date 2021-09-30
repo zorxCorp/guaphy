@@ -179,7 +179,7 @@ class Model {
     let self = new this
 
     return await self.query()
-      .set(self.$variable, data)
+      .set(self.$variable, data, "+=")
       .return(self.$variable)
       .fetch()
   }
