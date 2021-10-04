@@ -435,7 +435,7 @@ test.group('QueryBuilder', (group) => {
 				name: 'Amine',
 				position: 'Maintainer'
 			})
-				.toCypher(),  "SET p = { name: 'Amine', position: 'Maintainer' }")
+				.toCypher(),  "SET p += { name: 'Amine', position: 'Maintainer' }")
 
 			assert.equal((new QueryBuilder).update({
 				'p.name': 'Amine',
@@ -449,7 +449,7 @@ test.group('QueryBuilder', (group) => {
 				name: 'Amine',
 				position: 'Maintainer'
 			})
-				.toCypher(),  "SET p = { name: 'Amine', position: 'Maintainer' }")
+				.toCypher(),  "SET p += { name: 'Amine', position: 'Maintainer' }")
 		})
 
 		test('unwind', async (assert) => {

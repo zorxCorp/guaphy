@@ -263,6 +263,7 @@ test.group('Model Instance Methods', (group) => {
 
 		assert.instanceOf(person, Person)
 		assert.equal(person.name, "Leeto")
+		assert.exists(person.created_at)
 	})
 
 	test('fill', async (assert) => {

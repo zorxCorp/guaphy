@@ -443,8 +443,12 @@ class QueryBuilder {
     return this;
   }
 
-  set(field, val, operator = "=") {
+  set(field, val, operator) {
     this._mode = 'write'
+
+    if (!operator) {
+      operator = typeof val === "object" ? "+=" : "="
+    }
 
     this._addClause(new Clause(this, this.#model).set(field, val, operator))
 
